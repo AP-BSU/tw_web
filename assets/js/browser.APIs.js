@@ -1,7 +1,25 @@
 // APIs
 
 //Google ReCaptcha
+const captchaResponse = grecaptcha.getResponse();
 
+// Validate on Client
+if (captchaResponse.length === 0) {
+    alert("Please verify that you are not a robot.");
+    return; // Stop here
+}
+
+// API  token route
+fetch(`${API_BASE}/feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+        name: name,
+        email: email, 
+        message: message,
+        token: captchaResponse
+    })
+})
 
 //EmailJS
 (function() {
