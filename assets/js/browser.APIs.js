@@ -1,13 +1,24 @@
 // APIs
 
 //Google ReCaptcha
-const captchaResponse = grecaptcha.getResponse();
-
-// Validate on Client
-if (captchaResponse.length === 0) {
-    alert("Please verify that you are not a robot.");
-    return; // Stop here
-}
+grecaptcha.ready(function() {
+    // Asks Google: Is this a human visiting?
+    grecaptcha.execute('6LdUGDYsAAAAABWLd2FdBxvC0cVpqMtmRZ2xS0ww', {action: 'homepage_load'}).then(function(token) {
+        
+        // v3 token to user
+        fetch('/api/users/track', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'visit',
+                token: token // token
+            })
+        });
+        
+    });
+});
 
 // API  token route
 fetch(`${API_BASE}/feedback`, {
