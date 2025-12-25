@@ -56,6 +56,32 @@ router.post('/feedback', async (req, res) => {
   }
 });
 
+/// Google ReCaptcha (V2)
+
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault(); 
+    
+    // Get Token (User action verified)
+    const captchaResponse = grecaptcha.getResponse();
+    
+    if (captchaResponse.length === 0) {
+        alert("Please verify that you are not a robot.");
+        return; 
+    }
+
+    // user token saved to Database
+    fetch(`${API_BASE}/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            name: name,
+            email: email, 
+            message: message,
+            token: captchaResponse //
+        })
+    });
+});
+
 
 // Full stats report
 router.get('/stats', async (req, res) => {
